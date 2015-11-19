@@ -1,0 +1,4 @@
+<modules>
+    <module id="2" entry="nkorange.replier.core.module.BrowserModule.openBrowser" route="exist:1,7;order:1" />
+    <module id="3" entry="nkorange.replier.core.module.BrowserModule.openGoogleAndSearch" route="exist:5;order:1" />
+</modules>
