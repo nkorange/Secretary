@@ -20,6 +20,43 @@ public class Module {
 
     private Router router;
 
+    public boolean end() {
+        Class clazz = instance.getClass();
+        Object res = null;
+        try {
+            Method method = clazz.getDeclaredMethod("end");
+            res = method.invoke(instance);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        if (res == null) {
+            throw new RuntimeException("not get the result of the method");
+        }
+
+        return (Boolean) res;
+
+    }
+
+    public void put(String input) {
+
+        Class clazz = instance.getClass();
+        try {
+            Method method = clazz.getDeclaredMethod("put", String.class);
+            method.invoke(instance, input);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void process(String[] args) {
 
         Class clazz = instance.getClass();

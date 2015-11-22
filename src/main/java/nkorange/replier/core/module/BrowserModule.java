@@ -6,11 +6,33 @@ import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
 import nkorange.replier.exceptions.SysInitException;
 
 import java.lang.reflect.Method;
+import java.net.URLEncoder;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * @author pengfei.zhu.
  */
 public class BrowserModule {
+
+    private LinkedBlockingDeque<String> inputs = new LinkedBlockingDeque<String>();
+
+    public void put(String input) {
+        try {
+            inputs.put(input);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private volatile boolean ended = false;
+
+    public boolean end() {
+        return ended;
+    }
+
+    public void setEnd(boolean ended) {
+        this.ended = ended;
+    }
 
     public BrowserModule() {
     }
@@ -21,6 +43,8 @@ public class BrowserModule {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        setEnd(true);
     }
 
     public void openGoogle() {
@@ -29,14 +53,20 @@ public class BrowserModule {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        setEnd(true);
     }
 
-    public void openGoogleAndSearch(String[] keywords) {
+    public void openGoogleAndSearch() {
         try {
-            browse("https://www.google.com.hk/?gws_rd=ssl#newwindow=1&safe=strict&q=" + keywords[0]);
+            String keywords = inputs.take();
+            System.out.println("--------------" + keywords);
+            browse("https://www.google.com.hk/?gws_rd=ssl#newwindow=1&safe=strict&q=" + URLEncoder.encode(keywords,
+                    "UTF-8"));
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        setEnd(true);
     }
 
     private void browse(String url) throws Exception {
@@ -44,12 +74,12 @@ public class BrowserModule {
         if (java.awt.Desktop.isDesktopSupported()) {
             try {
                 java.net.URI uri = java.net.URI.create(url);
-                java.awt.Desktop dp = java.awt.Desktop.getDesktop() ;
+                java.awt.Desktop dp = java.awt.Desktop.getDesktop();
                 if (dp.isSupported(java.awt.Desktop.Action.BROWSE)) {
-                    dp.browse( uri ) ;
+                    dp.browse(uri);
                 }
             } catch (Exception e) {
-                e.printStackTrace() ;
+                e.printStackTrace();
             }
         }
     }

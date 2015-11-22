@@ -20,7 +20,11 @@ public class ModuleManager extends Thread {
 
     private Map<String, Module> modules = new ConcurrentHashMap<String, Module>();
 
+    private Map<String, Object> instances = new ConcurrentHashMap<String, Object>();
+
     private SpeakModule speakModule;
+
+    private Module listeningModule = null;
 
     private ModuleClassLoader loader = new ModuleClassLoader();
 
@@ -74,7 +78,14 @@ public class ModuleManager extends Thread {
 
         try {
             Class clazz = loader.loadClass(className);
-            Object instance = clazz.newInstance();
+
+            Object instance;
+            if (instances.containsKey(className)) {
+                instance = instances.get(className);
+            } else {
+                instance = clazz.newInstance();
+                instances.put(className, instance);
+            }
             ModuleProxy proxy = createProxy();
             Object proxyInstance = proxy.getInstance(instance);
             module.setInstance(proxyInstance);
@@ -131,13 +142,37 @@ public class ModuleManager extends Thread {
             if (StringUtils.isEmpty(words)) {
                 continue;
             }
-            process(words);
 
+            if (listeningModule != null && !listeningModule.end()) {
+
+                System.out.println("listening........");
+                listeningModule.put(words);
+                listeningModule = null;
+                continue;
+            }
+
+            listeningModule = null;
+
+            executor.submit(new Task(words));
+            //process(words);
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public class Task extends Thread {
+
+        private String words;
+
+        public Task(String words) {
+            this.words = words;
+        }
+
+        public void run() {
+            process(words);
         }
     }
 
@@ -157,8 +192,13 @@ public class ModuleManager extends Thread {
                 report("不知道如何处理");
                 return;
             }
-            module.process(parseArguments(info));
+
+            listeningModule = module;
+            listeningModule.process(parseArguments(info));
+
+
         }
+
     }
 
     private void report(String words) {
