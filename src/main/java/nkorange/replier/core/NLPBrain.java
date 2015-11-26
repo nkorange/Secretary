@@ -60,7 +60,20 @@ public class NLPBrain extends Thread implements Brain {
     }
 
     public void run() {
-        while (true);
+        while (true) {
+
+            Action action = moduleManager.takeOne();
+            if (Action.isSpeakAction(action)) {
+                getCurrentSpeaker().say(action.getArgs());
+            }
+
+            // rest for a while:
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void setSpeaker(Speaker speaker) {

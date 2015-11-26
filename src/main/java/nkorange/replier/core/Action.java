@@ -18,6 +18,10 @@ public class Action {
         this.args = args;
     }
 
+    public String getArgs() {
+        return args;
+    }
+
     public static Action speakAction(String words) {
         return new Action(ActionType.SPEAK, words);
     }

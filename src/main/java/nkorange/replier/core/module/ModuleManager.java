@@ -8,10 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 /**
  * @author pengfei.zhu.
@@ -32,9 +29,9 @@ public class ModuleManager extends Thread {
 
     private static final String MODULE_CONFIG = "src/main/resource/memory/modules.xml";
 
-    private final ConcurrentLinkedQueue<String> inQueue = new ConcurrentLinkedQueue<String>();
+    private final LinkedBlockingDeque<String> inQueue = new LinkedBlockingDeque<String>();
 
-    private final ConcurrentLinkedQueue<Action> outQueue = new ConcurrentLinkedQueue<Action>();
+    private final LinkedBlockingDeque<Action> outQueue = new LinkedBlockingDeque<Action>();
 
     private ExecutorService executor = Executors.newFixedThreadPool(100);
 
@@ -138,14 +135,19 @@ public class ModuleManager extends Thread {
 
         while (true) {
 
-            String words = inQueue.poll();
+            String words = null;
+            try {
+                words = inQueue.take();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             if (StringUtils.isEmpty(words)) {
                 continue;
             }
 
             if (listeningModule != null && !listeningModule.end()) {
 
-                System.out.println("listening........");
                 listeningModule.put(words);
                 listeningModule = null;
                 continue;
@@ -161,6 +163,18 @@ public class ModuleManager extends Thread {
                 e.printStackTrace();
             }
         }
+    }
+
+    public Action takeOne() {
+
+        Action action = null;
+        try {
+            action = outQueue.take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return action;
     }
 
     public class Task extends Thread {
@@ -213,7 +227,4 @@ public class ModuleManager extends Thread {
         this.processor = processor;
     }
 
-    public Action pollAction() {
-        return outQueue.poll();
-    }
 }

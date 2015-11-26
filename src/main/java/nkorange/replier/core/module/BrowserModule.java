@@ -1,38 +1,12 @@
 package nkorange.replier.core.module;
 
-import edu.stanford.ejalbert.BrowserLauncher;
-import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
-import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
-import nkorange.replier.exceptions.SysInitException;
-
-import java.lang.reflect.Method;
 import java.net.URLEncoder;
-import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * @author pengfei.zhu.
  */
-public class BrowserModule {
+public class BrowserModule extends SustainableModule implements CradleModule {
 
-    private LinkedBlockingDeque<String> inputs = new LinkedBlockingDeque<String>();
-
-    public void put(String input) {
-        try {
-            inputs.put(input);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private volatile boolean ended = false;
-
-    public boolean end() {
-        return ended;
-    }
-
-    public void setEnd(boolean ended) {
-        this.ended = ended;
-    }
 
     public BrowserModule() {
     }
@@ -43,8 +17,6 @@ public class BrowserModule {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        setEnd(true);
     }
 
     public void openGoogle() {
@@ -53,11 +25,11 @@ public class BrowserModule {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        setEnd(true);
     }
 
     public void openGoogleAndSearch() {
         try {
+            setEnd(false);
             String keywords = inputs.take();
             System.out.println("--------------" + keywords);
             browse("https://www.google.com.hk/?gws_rd=ssl#newwindow=1&safe=strict&q=" + URLEncoder.encode(keywords,

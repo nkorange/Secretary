@@ -1,20 +1,22 @@
 package nkorange.replier.core.memory;
 
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 /**
  * @author pengfei.zhu.
  */
 public class Memory {
 
-
-    public long searchToken(String word) {
-
-        // TODO search in memory a token with specified word
-        return 0L;
-    }
+    private Map<String, Long> cmds = new TreeMap<String, Long>();
 
     public void loadMemory() {
 
     }
 
+    protected void saveMemory() {
+
+    }
 
 }

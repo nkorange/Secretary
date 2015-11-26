@@ -30,12 +30,11 @@ public class ModuleProxy implements MethodInterceptor {
 
     public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
 
-        if (method.getName() == BaseModule.REPORT) {
+        if (method.getName() == CradleModule.REPORT) {
             say((String) objects[0]);
             return null;
         }
-        methodProxy.invokeSuper(o, objects);
-        return null;
+        return methodProxy.invokeSuper(o, objects);
     }
 
     private void say(String msg) {
