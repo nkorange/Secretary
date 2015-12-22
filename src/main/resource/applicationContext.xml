@@ -5,24 +5,13 @@
 
     <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
 
-    <bean id="replier" class="nkorange.replier.DefaultReplier">
-        <property name="brain" ref="brain"/>
+    <bean id="replier" class="nkorange.secretary.DefaultReplier">
         <property name="listener" ref="listener"/>
-        <property name="speaker" ref="speaker"/>
         <property name="worker" ref="worker"/>
     </bean>
-    <bean id="brain" class="nkorange.replier.core.NLPBrain">
-        <property name="speaker" ref="speaker"/>
-        <property name="moduleManager" ref="moduleManager"/>
-        <property name="memory" ref="memory"/>
+    <bean id="processor" class="nkorange.secretary.core.nlp.StandfordNLPProcessor">
     </bean>
-    <bean id="processor" class="nkorange.replier.core.nlp.StandfordNLPProcessor">
-    </bean>
-    <bean id="listener" class="nkorange.replier.ScreenReader"/>
-    <bean id="speaker" class="nkorange.replier.ScreenWriter"/>
-    <bean id="worker" class="nkorange.replier.DefaultWorker"/>
-    <bean id="moduleManager" class="nkorange.replier.core.module.ModuleManager">
-        <property name="processor" ref="processor" />
-    </bean>
-    <bean id="memory" class="nkorange.replier.core.memory.Memory"/>
+    <bean id="listener" class="nkorange.secretary.ScreenReader"/>
+    <bean id="worker" class="nkorange.secretary.DefaultWorker"/>
+    <bean id="memory" class="nkorange.secretary.core.memory.Memory"/>
 </beans>
