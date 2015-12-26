@@ -4,6 +4,7 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
+import nkorange.secretary.core.memory.task.Task;
 
 /**
  * @author pengfei.zhu.
@@ -44,6 +45,10 @@ public class Akka {
         actorSystem.actorFor("/user/manager").tell(msg, sender);
     }
 
+    public static void addTask(Task task, ActorRef sender) {
+        actorSystem.actorFor("/user/taskManager").tell(task, sender);
+    }
+
     public static void tellManager(String msg) {
         actorSystem.actorFor("/user/manager").tell(msg, ActorRef.noSender());
     }
@@ -52,6 +57,5 @@ public class Akka {
 
         return actorSystem.actorOf(Props.create(clazz), name);
     }
-
 
 }

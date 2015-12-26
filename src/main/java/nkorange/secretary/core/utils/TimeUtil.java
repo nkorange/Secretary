@@ -1,5 +1,6 @@
 package nkorange.secretary.core.utils;
 
+import nkorange.secretary.exceptions.SysInitException;
 import org.fnlp.nlp.cn.CNFactory;
 import org.fnlp.nlp.cn.ner.TimeNormalizer;
 import org.fnlp.util.exception.LoadModelException;
@@ -32,6 +33,15 @@ public class TimeUtil {
     }
 
     public static Date interpretTime(String text) {
-        return normalizer.parse(text)[0].getTime();
+
+        System.out.println("TimeUtil:" + text);
+        Date date = normalizer.parse(text)[0].getTime();
+        System.out.println("TimeUtil:" + date);
+        return date;
+    }
+
+    public static void main(String[] args) {
+
+        interpretTime("半小时后");
     }
 }

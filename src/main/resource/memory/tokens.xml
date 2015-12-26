@@ -6,6 +6,6 @@
     <token id="5" name="search" type="action" terms="搜索,搜"/>
     <token id="6" class="date" name="today" type="object" terms="今天,今个"/>
     <token id="7" name="browser" type="object" terms="浏览器,chrome"/>
-    <token id="8" name="clock" type="object" terms="闹钟,定时器"/>
+    <token id="8" name="clock" type="object" terms="闹钟,定时器,提醒"/>
     <token id="9" name="google" type="object" terms="谷歌"/>
 </tokens>

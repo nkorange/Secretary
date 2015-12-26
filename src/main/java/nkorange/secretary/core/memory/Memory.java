@@ -1,5 +1,11 @@
 package nkorange.secretary.core.memory;
 
+import akka.actor.ActorRef;
+import akka.actor.Props;
+import nkorange.secretary.core.memory.task.TaskManager;
+import nkorange.secretary.core.module.ModuleManager;
+import nkorange.secretary.core.utils.Akka;
+
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -8,10 +14,17 @@ import java.util.TreeMap;
  */
 public class Memory {
 
-    private Map<String, Long> cmds = new TreeMap<String, Long>();
+    private ActorRef taskManager;
 
-    public void loadMemory() {
+    public static Memory loadMemory() {
 
+        Memory memory = new Memory();
+        return memory;
+    }
+
+    protected Memory() {
+
+        taskManager = Akka.system().actorOf(Props.create(TaskManager.class), "taskManager");
     }
 
     protected void saveMemory() {

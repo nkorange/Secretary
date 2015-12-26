@@ -22,6 +22,7 @@ public class NLPBrain extends UntypedActor {
     //@PostConstruct
     public void init() {
         //start();
+        memory = Memory.loadMemory();
         moduleManager = Akka.system().actorOf(Props.create(ModuleManager.class), "manager");
     }
 

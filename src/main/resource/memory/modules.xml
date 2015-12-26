@@ -2,4 +2,5 @@
     <module id="2" entry="nkorange.secretary.core.module.BrowserModule.openBrowser" route="exist:1,7;order:1"/>
     <module id="3" entry="nkorange.secretary.core.module.BrowserModule.openGoogleAndSearch" route="exist:5;order:1"/>
     <module id="4" entry="nkorange.secretary.core.module.BrowserModule.openGoogle" route="exist:1,9;order:1"/>
+    <module id="5" entry="nkorange.secretary.core.module.TimeModule.setAlarm" route="exist:2,8;order:1" />
 </modules>

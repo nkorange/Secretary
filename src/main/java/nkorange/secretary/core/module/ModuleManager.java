@@ -159,7 +159,7 @@ public class ModuleManager extends UntypedActor {
         }
     }
 
-    public class Task extends Thread {
+    private class Task extends Thread {
 
         private String words;
 

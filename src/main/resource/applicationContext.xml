@@ -13,5 +13,4 @@
     </bean>
     <bean id="listener" class="nkorange.secretary.ScreenReader"/>
     <bean id="worker" class="nkorange.secretary.DefaultWorker"/>
-    <bean id="memory" class="nkorange.secretary.core.memory.Memory"/>
 </beans>
