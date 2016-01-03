@@ -1,6 +1,7 @@
 package replier;
 
 import com.iflytek.cloud.speech.*;
+import net.sf.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -18,6 +19,10 @@ public class MainApp {
             System.out.println("Result:" + results
                     .getResultString
                             ());
+
+            JSONObject json = JSONObject.fromObject(results.getResultString());
+
+            System.out.println("json:" + json);
         }
 
         //会话发生错误回调接口
@@ -88,14 +93,14 @@ public class MainApp {
 
         mIat.stopListening();
 
-        synchronized (MainApp.class) {
+        /*synchronized (MainApp.class) {
             while (true) {
                 try {
                     MainApp.class.wait();
                 } catch (Throwable e) {
                 }
             }
-        }
+        }*/
         //Thread.sleep(10000);
     }
 

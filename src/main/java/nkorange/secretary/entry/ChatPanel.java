@@ -1,13 +1,18 @@
 package nkorange.secretary.entry;
 
+import com.iflytek.cloud.speech.RecognizerListener;
+import com.iflytek.cloud.speech.SpeechConstant;
+import com.iflytek.cloud.speech.SpeechRecognizer;
+import com.iflytek.cloud.speech.SpeechUtility;
+import nkorange.secretary.SpeechListener;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.sampled.*;
 import javax.swing.BorderFactory;
@@ -66,6 +71,23 @@ public class ChatPanel extends JFrame {
     Capture capture = new Capture();
 
     AudioInputStream audioInputStream;
+
+    static SpeechRecognizer mIat;
+
+    static final String RECORD_NAME = "cmd.wav";
+
+    RecognizerListener mRecoListener = new SpeechListener();
+
+    static {
+
+        SpeechUtility.createUtility(SpeechConstant.APPID + "=5677c03b");
+
+        mIat = SpeechRecognizer.createRecognizer();
+        mIat.setParameter(SpeechConstant.DOMAIN, "iat");
+        mIat.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+        mIat.setParameter(SpeechConstant.ACCENT, "mandarin ");
+        mIat.setParameter(SpeechConstant.AUDIO_SOURCE, "-1");
+    }
 
     private void stopTalk() {
 
@@ -231,7 +253,46 @@ public class ChatPanel extends JFrame {
                 ex.printStackTrace();
                 return;
             }
-            saveToFile("record22.wav", AudioFileFormat.Type.WAVE);
+            saveToFile(RECORD_NAME, AudioFileFormat.Type.WAVE);
+
+            // Speech to text:
+            mIat.startListening(mRecoListener);
+
+            try {
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(RECORD_NAME));
+
+                List<byte[]> buffers = new ArrayList<byte[]>();
+
+                byte[] voice = new byte[4800];
+
+                int len;
+                do {
+                    len = bis.read(voice);
+                    buffers.add(voice);
+                    if (len < 4800) {
+                        break;
+                    }
+                    voice = new byte[4800];
+                } while (true);
+
+
+                for (int i = 0; i < buffers.size(); i++) {
+                    // 每次写入msc数据4.8K,相当150ms录音数据
+                    mIat.writeAudio(buffers.get(i), 0, buffers.get(i).length);
+                    try {
+                        Thread.sleep(150);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                //System.out.println(buffers.size());
+
+            } catch (IOException ioe) {
+                throw new RuntimeException("" + ioe.getMessage());
+            }
+
+            mIat.stopListening();
         }
     }
 
