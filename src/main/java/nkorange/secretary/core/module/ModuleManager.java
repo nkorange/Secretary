@@ -99,7 +99,6 @@ public class ModuleManager extends UntypedActor {
     public long matchNLPInfo(NLPInfo info) {
 
         // to keep it simple for now, we don't tolerate tokens other than those included in Condition.exists list.
-
         // construct a Condition to match the modules:
         Condition condition = Condition.fromNLPInfo(info);
 

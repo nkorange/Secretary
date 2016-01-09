@@ -1,13 +1,14 @@
 package nkorange.secretary.core.module;
 
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @author pengfei.zhu.
  */
 public abstract class SustainableModule {
 
-    private LinkedBlockingDeque<String> inputs = new LinkedBlockingDeque<String>();
+    private LinkedBlockingQueue<String> inputs = new LinkedBlockingQueue<String>();
 
     private volatile boolean ended = true;
 
@@ -29,10 +30,12 @@ public abstract class SustainableModule {
     }
 
     public void put(String input) {
+
         try {
             inputs.put(input);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
     }
 }

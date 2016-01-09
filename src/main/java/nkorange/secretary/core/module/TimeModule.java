@@ -32,6 +32,7 @@ public class TimeModule extends SustainableModule implements CradleModule {
         String remindContent = take();
         Task task = new Task(date.getTime(), Action.speakAction(remindContent));
         Akka.addTask(task, ActorRef.noSender());
+        report("已经设置好了");
     }
 
     public void report(String s) {

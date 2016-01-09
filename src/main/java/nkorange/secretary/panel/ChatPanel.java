@@ -10,6 +10,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -154,7 +156,6 @@ public class ChatPanel extends JFrame {
 
 
     }
-
 
     class Capture implements Runnable {
         TargetDataLine line;
@@ -325,7 +326,7 @@ public class ChatPanel extends JFrame {
         b_insert = new JButton("文字"); // 插入
         b_remove = new JButton("清空"); // 清除
         b_icon = new JButton("图片"); // 插入图片
-        b_record = new JButton("说话"); // 说话
+        b_record = new JButton("按住说话"); // 说话
         b_insert.addActionListener(new ActionListener() { // 插入文字的事件
             public void actionPerformed(ActionEvent e) {
                 insert(getFontAttrib());
@@ -344,7 +345,7 @@ public class ChatPanel extends JFrame {
                 insertIcon(f.getSelectedFile()); // 插入图片
             }
         });
-        b_record.addActionListener(new ActionListener() {
+/*        b_record.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
                 if (b_record.getText().equals("说话")) {
@@ -355,6 +356,32 @@ public class ChatPanel extends JFrame {
                     b_record.setText("说话");
                     capture.stop();
                 }
+
+            }
+        });*/
+        b_record.addMouseListener(new MouseListener() {
+
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            public void mousePressed(MouseEvent e) {
+
+                b_record.setText("松开结束");
+                file = null;
+                capture.start();
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                b_record.setText("按住说话");
+                capture.stop();
+            }
+
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            public void mouseExited(MouseEvent e) {
 
             }
         });

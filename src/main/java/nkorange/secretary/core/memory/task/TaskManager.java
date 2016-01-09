@@ -16,7 +16,7 @@ public class TaskManager extends UntypedActor {
     private Timer timer = new Timer(true);
 
     public TaskManager() {
-        // TODO: load persistent tasks
+        // TODO: load persisted tasks
     }
 
     @Override

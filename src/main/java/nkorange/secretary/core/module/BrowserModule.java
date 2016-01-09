@@ -12,6 +12,8 @@ public class BrowserModule extends SustainableModule implements CradleModule {
     }
 
     public void openBrowser() {
+
+        report("好的，主人");
         try {
             browse("http:about:blank");
         } catch (Exception e) {

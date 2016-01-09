@@ -42,6 +42,6 @@ public class TimeUtil {
 
     public static void main(String[] args) {
 
-        interpretTime("半小时后");
+        interpretTime("晚上11点");
     }
 }
