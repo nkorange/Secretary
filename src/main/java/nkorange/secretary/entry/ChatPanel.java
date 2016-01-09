@@ -4,7 +4,10 @@ import com.iflytek.cloud.speech.RecognizerListener;
 import com.iflytek.cloud.speech.SpeechConstant;
 import com.iflytek.cloud.speech.SpeechRecognizer;
 import com.iflytek.cloud.speech.SpeechUtility;
+import nkorange.secretary.Replier;
 import nkorange.secretary.SpeechListener;
+import nkorange.secretary.core.utils.Akka;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -78,9 +81,11 @@ public class ChatPanel extends JFrame {
 
     RecognizerListener mRecoListener = new SpeechListener();
 
+    static final String MY_IFLYTEK_APP_ID = "5677c03b";
+
     static {
 
-        SpeechUtility.createUtility(SpeechConstant.APPID + "=5677c03b");
+        SpeechUtility.createUtility(SpeechConstant.APPID + "=" + MY_IFLYTEK_APP_ID);
 
         mIat = SpeechRecognizer.createRecognizer();
         mIat.setParameter(SpeechConstant.DOMAIN, "iat");
@@ -88,6 +93,10 @@ public class ChatPanel extends JFrame {
         mIat.setParameter(SpeechConstant.ACCENT, "mandarin ");
         mIat.setParameter(SpeechConstant.AUDIO_SOURCE, "-1");
     }
+
+    private static ClassPathXmlApplicationContext context;
+
+    private static Replier replier;
 
     private void stopTalk() {
 
@@ -149,6 +158,8 @@ public class ChatPanel extends JFrame {
         } catch (Exception ex) {
             reportStatus(ex.toString());
         }
+
+
     }
 
 
@@ -346,6 +357,7 @@ public class ChatPanel extends JFrame {
 
                 if (b_record.getText().equals("说话")) {
                     b_record.setText("说完了");
+                    file = null;
                     capture.start();
                 } else {
                     b_record.setText("说话");
@@ -378,6 +390,10 @@ public class ChatPanel extends JFrame {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         addText.requestFocus();
+
+        context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        replier = context.getBean(Replier.class);
+        replier.start();
     }
 
     /**
@@ -454,6 +470,7 @@ public class ChatPanel extends JFrame {
     }
 
     public static void main(String args[]) {
+
         new ChatPanel();
     }
 

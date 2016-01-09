@@ -132,7 +132,7 @@ public class ModuleManager extends UntypedActor {
 
         // If message is not sent from brain:
         if (getSender() != Akka.actorForBrain()) {
-            // TODO, should evaluate the msg before deliver to user
+            // TODO, should evaluate the msg before delivering to user
             Akka.tellUser(words);
             return;
         }
@@ -175,7 +175,8 @@ public class ModuleManager extends UntypedActor {
     private void process(String words) {
 
         System.out.println("task:" + words);
-
+        // Delete all punctuations:
+        words = words.replaceAll("[\\pP‘’“”]", "");
         List<NLPInfo> list = processor.analyze(words);
 
         if (list == null || list.isEmpty()) {

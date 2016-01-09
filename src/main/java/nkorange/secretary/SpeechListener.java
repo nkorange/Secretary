@@ -53,6 +53,7 @@ public class SpeechListener implements RecognizerListener {
 
         if (last) {
             // Notify brain:
+            System.out.println("收到指令：" + speech);
             Akka.tellBrain(speech);
             speech = "";
         }
