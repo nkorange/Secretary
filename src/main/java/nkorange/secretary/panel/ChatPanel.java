@@ -1,13 +1,10 @@
-package nkorange.secretary.entry;
+package nkorange.secretary.panel;
 
 import com.iflytek.cloud.speech.RecognizerListener;
 import com.iflytek.cloud.speech.SpeechConstant;
 import com.iflytek.cloud.speech.SpeechRecognizer;
 import com.iflytek.cloud.speech.SpeechUtility;
-import nkorange.secretary.Replier;
-import nkorange.secretary.SpeechListener;
-import nkorange.secretary.core.utils.Akka;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import nkorange.secretary.translate.stt.IflytekListener;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -79,7 +76,7 @@ public class ChatPanel extends JFrame {
 
     static final String RECORD_NAME = "cmd.wav";
 
-    RecognizerListener mRecoListener = new SpeechListener();
+    RecognizerListener mRecoListener = new IflytekListener();
 
     static final String MY_IFLYTEK_APP_ID = "5677c03b";
 
@@ -93,10 +90,6 @@ public class ChatPanel extends JFrame {
         mIat.setParameter(SpeechConstant.ACCENT, "mandarin ");
         mIat.setParameter(SpeechConstant.AUDIO_SOURCE, "-1");
     }
-
-    private static ClassPathXmlApplicationContext context;
-
-    private static Replier replier;
 
     private void stopTalk() {
 
@@ -307,7 +300,6 @@ public class ChatPanel extends JFrame {
         }
     }
 
-
     public ChatPanel() {
         super("小秘");
         try { // 使用Windows的界面风格
@@ -390,10 +382,6 @@ public class ChatPanel extends JFrame {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         addText.requestFocus();
-
-        context = new ClassPathXmlApplicationContext("applicationContext.xml");
-        replier = context.getBean(Replier.class);
-        replier.start();
     }
 
     /**
@@ -415,6 +403,14 @@ public class ChatPanel extends JFrame {
     private void insert(FontAttrib attrib) {
         try { // 插入文本
             doc.insertString(doc.getLength(), "我：" + attrib.getText() + "\n", attrib.getAttrSet());
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void insert(String text) {
+        try {
+            doc.insertString(doc.getLength(), text + "\n", getFontAttrib().getAttrSet());
         } catch (BadLocationException e) {
             e.printStackTrace();
         }

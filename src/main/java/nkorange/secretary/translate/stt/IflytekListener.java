@@ -1,4 +1,4 @@
-package nkorange.secretary;
+package nkorange.secretary.translate.stt;
 
 import com.iflytek.cloud.speech.*;
 import net.sf.json.*;
@@ -7,7 +7,7 @@ import nkorange.secretary.core.utils.Akka;
 /**
  * @author pengfei.zhu.
  */
-public class SpeechListener implements RecognizerListener {
+public class IflytekListener implements RecognizerListener {
 
     private String speech;
 
@@ -54,6 +54,7 @@ public class SpeechListener implements RecognizerListener {
         if (last) {
             // Notify brain:
             System.out.println("收到指令：" + speech);
+            Akka.tellReplier("我：" + speech);
             Akka.tellBrain(speech);
             speech = "";
         }

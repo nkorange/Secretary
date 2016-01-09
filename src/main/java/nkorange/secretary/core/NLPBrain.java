@@ -10,7 +10,7 @@ import nkorange.secretary.core.utils.Akka;
 /**
  * @author pengfei.zhu.
  */
-public class NLPBrain extends UntypedActor {
+public class NLPBrain extends UntypedActor implements Brain {
 
     private ActorRef moduleManager;
     private Memory memory;

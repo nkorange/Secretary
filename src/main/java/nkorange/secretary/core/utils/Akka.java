@@ -34,7 +34,12 @@ public class Akka {
     }
 
     public static void tellUser(String msg) {
+        actorSystem.actorFor("/user/texter").tell(msg, ActorRef.noSender());
         actorSystem.actorFor("/user/speaker").tell(msg, ActorRef.noSender());
+    }
+
+    public static void tellReplier(String msg) {
+        actorSystem.actorFor("/user/replier").tell(msg, ActorRef.noSender());
     }
 
     public static void tellBrain(String msg) {

@@ -1,20 +1,21 @@
 package nkorange.secretary;
 
 import akka.actor.UntypedActor;
+import nkorange.secretary.core.utils.Akka;
 import org.springframework.stereotype.Component;
 
 /**
  * @author pengfei.zhu.
  */
 @Component
-public class ScreenWriter extends UntypedActor implements Speaker {
+public class Texter extends UntypedActor implements Response {
 
     public void init() {
 
     }
 
     public void say(String msg) {
-        System.out.println(msg);
+        Akka.tellReplier("小秘：" + msg);
     }
 
     @Override

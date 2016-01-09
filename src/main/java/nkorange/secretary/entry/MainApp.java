@@ -1,6 +1,11 @@
 package nkorange.secretary.entry;
 
+import akka.actor.ActorRef;
+import akka.actor.Props;
+import nkorange.secretary.DefaultReplier;
 import nkorange.secretary.Replier;
+import nkorange.secretary.core.NLPBrain;
+import nkorange.secretary.core.utils.Akka;
 import nkorange.secretary.exceptions.SysInitException;
 import org.springframework.beans.BeansException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -12,61 +17,12 @@ public class MainApp {
 
     private static ClassPathXmlApplicationContext context;
 
-    private static Replier replier;
-
-    private static volatile boolean running = true;
+    private static ActorRef replier;
 
     public static void main(String[] args) {
 
-        try {
-            init();
-        } catch (SysInitException e) {
-            e.printStackTrace();
-        }
-
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
-
-                synchronized (MainApp.class) {
-                    running = false;
-                    MainApp.class.notify();
-                }
-            }
-
-        });
-
-        start();
-
-        synchronized (MainApp.class) {
-            while (running) {
-                try {
-                    MainApp.class.wait();
-                } catch (Throwable e) {
-                }
-            }
-        }
-
-    }
-
-    private static void init() throws SysInitException {
-
-        try {
-            context = new ClassPathXmlApplicationContext("applicationContext.xml");
-        } catch (BeansException e) {
-            throw new SysInitException(e.getMessage());
-        } finally {
-            if (context == null) {
-                throw new SysInitException("context is null!");
-            }
-        }
-
-        System.out.println("context:" + context);
-
-        replier = context.getBean(Replier.class);
-    }
-
-    private static void start() {
-        replier.start();
+        context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        replier = Akka.system().actorOf(Props.create(DefaultReplier.class), "replier");
     }
 
 }

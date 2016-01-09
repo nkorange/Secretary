@@ -5,8 +5,6 @@ package nkorange.secretary;
  */
 public interface Replier {
 
-    public void recognize();
-
     public void start();
 
     public void stop();

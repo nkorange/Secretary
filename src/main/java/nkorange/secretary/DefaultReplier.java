@@ -2,80 +2,51 @@ package nkorange.secretary;
 
 import akka.actor.ActorRef;
 import akka.actor.Props;
+import akka.actor.UntypedActor;
 import nkorange.secretary.core.NLPBrain;
 import nkorange.secretary.core.utils.Akka;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import nkorange.secretary.panel.ChatPanel;
 
 /**
  * @author pengfei.zhu.
  */
-public class DefaultReplier implements Replier {
+public class DefaultReplier extends UntypedActor implements Replier {
 
 
     private ActorRef brain;
 
-    private Listener listener;
+    private ActorRef texter;
 
     private ActorRef speaker;
 
-    private Worker worker;
+    private ChatPanel chatPanel;
 
-    private ExecutorService executor = Executors.newFixedThreadPool(100);
-
-    private boolean inited = false;
+    public DefaultReplier() {
+        init();
+    }
 
     private void init() {
-        if (!inited) {
 
-            brain = Akka.system().actorOf(Props.create(NLPBrain.class), "brain");
-            speaker = Akka.system().actorOf(Props.create(ScreenWriter.class), "speaker");
-            listener.init();
-            worker.init();
-        }
-        inited = true;
-    }
-
-    public String listen() {
-        return listener.read();
-    }
-
-    public void recognize() {
-
+        chatPanel = new ChatPanel();
+        brain = Akka.system().actorOf(Props.create(NLPBrain.class), "brain");
+        texter = Akka.system().actorOf(Props.create(Texter.class), "texter");
+        speaker = Akka.system().actorOf(Props.create(Speaker.class), "speaker");
     }
 
     public void start() {
-
-        String words;
-
         init();
-
-        while (true) {
-            words = listen();
-            analyze(words);
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void analyze(String words) {
-        Akka.tellBrain(words);
     }
 
     public void stop() {
 
     }
 
-    public void setListener(Listener listener) {
-        this.listener = listener;
-    }
+    @Override
+    public void onReceive(Object o) throws Exception {
 
-    public void setWorker(Worker worker) {
-        this.worker = worker;
+        if (o instanceof String) {
+            chatPanel.insert((String) o);
+        }
     }
 }
 
